@@ -1,0 +1,50 @@
+/* Reset */
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+body {
+  line-height: 1;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* Root */
+
+:root {
+  /* Text */
+  --text-primary: hsl(220, 20%, 90%);
+  --text-secondary: hsl(220, 20%, 70%);
+  --text-tertiary: hsl(220, 20%, 50%);
+  /* Backgrounds */
+  --bg-primary: hsl(225, 20%, 5%);
+  --bg-secondary: hsl(225, 20%, 10%);
+  --bg-tertiary: hsl(225, 20%, 15%);
+  /* Accent (AI feel) */
+  --accent-primary: hsl(245, 75%, 65%);
+  --accent-secondary: hsl(180, 100%, 50%);
+	--accent-tertiary: hsl(320, 85%, 65%);
+
+  /* Borders */
+  --border-color: hsl(220, 20%, 20%);
+  /* Status */
+  --success: hsl(140, 70%, 45%);
+  --warning: hsl(45, 90%, 60%);
+  --error: hsl(0, 80%, 50%);
+}
