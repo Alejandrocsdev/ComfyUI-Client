@@ -29,7 +29,7 @@ const Error = () => {
         </p>
 
         <button className={S.button} disabled={loading} onClick={handleRetry}>
-          {loading ? <InlineLoader loading={true} size={10} /> : 'Try Again'}
+          {loading ? <InlineLoader size={10} /> : 'Try Again'}
         </button>
       </div>
     </div>

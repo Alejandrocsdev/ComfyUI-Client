@@ -24,6 +24,10 @@ a {
   color: var(--text-primary);
   text-decoration: none;
 }
+ 
+button {
+	color: var(--text-primary);
+}
 
 /* Root */
 
@@ -39,12 +43,14 @@ a {
   /* Accent (AI feel) */
   --accent-primary: hsl(245, 75%, 65%);
   --accent-secondary: hsl(180, 100%, 50%);
-	--accent-tertiary: hsl(320, 85%, 65%);
+  --accent-tertiary: hsl(320, 85%, 65%);
 
   /* Borders */
   --border-color: hsl(220, 20%, 20%);
   /* Status */
-  --success: hsl(140, 70%, 45%);
-  --warning: hsl(45, 90%, 60%);
-  --error: hsl(0, 80%, 50%);
+  --active-green: hsl(140, 70%, 45%);
+	--active-green-border: hsl(140, 100%, 25%);
+  --inactive-red: hsl(355, 85%, 40%);
+	--inactive-red-border: hsl(0, 100%, 20%);
+	--error-red: hsl(355, 70%, 45%);
 }
