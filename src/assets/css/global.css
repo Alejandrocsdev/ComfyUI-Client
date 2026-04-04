@@ -5,7 +5,7 @@
   padding: 0;
   border: 0;
   background: none;
-  user-select: none;
+  /* user-select: none; */
   box-sizing: border-box;
 }
 
@@ -53,4 +53,6 @@ button {
   --inactive-red: hsl(355, 85%, 40%);
 	--inactive-red-border: hsl(0, 100%, 20%);
 	--error-red: hsl(355, 70%, 45%);
+	/* Header Hight */
+	--header-height: 5rem;
 }

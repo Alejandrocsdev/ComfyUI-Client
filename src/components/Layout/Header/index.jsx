@@ -6,11 +6,11 @@ import Status from '../../Status';
 const Header = () => {
   return (
     <header className={S.header}>
-			{/* Left */}
+      {/* Left */}
       <div className={S.left}></div>
-			{/* Right */}
+      {/* Right */}
       <div className={S.right}>
-				<Status />
+        <Status />
       </div>
     </header>
   );

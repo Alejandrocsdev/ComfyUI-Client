@@ -1,6 +1,6 @@
 .header {
   padding: 0.5rem;
-  height: 5rem;
+  height: var(--header-height);
   background-color: var(--bg-secondary);
   display: flex;
 }

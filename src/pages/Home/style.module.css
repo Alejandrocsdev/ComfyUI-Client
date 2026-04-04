@@ -1,12 +1,15 @@
 .container {
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
+	height: calc(100dvh - var(--header-height));
   background: #0f0f0f;
   color: white;
+	/* overflow: hidden; */
 }
 
 /* LEFT PANEL */
 .panel {
+	/* height: calc(100dvh - var(--header-height)); */
   width: 400px;
   padding: 20px;
   background: #1a1a1a;
@@ -97,11 +100,14 @@
 
 /* RIGHT PANEL */
 .output {
+	height: calc(100dvh - var(--header-height));
+	/* height: 100%; */
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #111;
+	overflow: hidden;
 }
 
 .output img {
