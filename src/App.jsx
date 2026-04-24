@@ -1,4 +1,5 @@
 // CSS
+import './assets/css/fonts.css';
 import './assets/css/global.css';
 // Libraries
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

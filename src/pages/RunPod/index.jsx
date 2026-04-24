@@ -6,74 +6,71 @@ import { useEffect, useState } from 'react';
 import { api, axiosPublic } from '../../api';
 // Components
 import InlineLoader from '../../components/Loaders/InlineLoader';
+import Icon from '../../components/Icon';
 // Utilities
 import { cssVar } from '../../utils';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const RunPod = () => {
-  const [status, setStatus] = useState(null);
+  const [pods, setPods] = useState(null);
   const [actionLoading, setActionLoading] = useState(null);
 
   useEffect(() => {
-    checkStatus();
-    const interval = setInterval(checkStatus, 5000);
+    fetchPods();
+    const interval = setInterval(fetchPods, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  const checkStatus = async () => {
-    await api(axiosPublic.get('/api/runpod'), {
-      onSuccess: (data) => setStatus(data.status),
-      onError: () => setStatus('inactive'),
+  const fetchPods = async () => {
+    await api(axiosPublic.get('/api/runpod/pods'), {
+      onSuccess: (data) => setPods(data),
+      onError: () => setPods([]),
     });
   };
 
-  const handleAction = async (action) => {
+  const handleCreate = async () => {
     if (actionLoading) return;
-    setActionLoading(action);
-    await api(axiosPublic.post(`/api/runpod/${action}`), {
-      onSuccess: () => checkStatus(),
+    setActionLoading('create');
+    await api(axiosPublic.post('/api/runpod/pods'), {
+      onSuccess: () => fetchPods(),
     });
     await delay(500);
     setActionLoading(null);
   };
 
-  const isActive = status === 'active' || status === 'running';
+  const handleTerminate = async (podId) => {
+    if (actionLoading) return;
+    setActionLoading(podId);
+    await api(axiosPublic.delete(`/api/runpod/pods/${podId}`), {
+      onSuccess: () => fetchPods(),
+    });
+    await delay(500);
+    setActionLoading(null);
+  };
+
+  const podCount = pods ? pods.length : null;
+  const isActive = podCount !== null && podCount > 0;
+  const lightClass = pods === null ? S.idle : isActive ? S.on : S.off;
 
   return (
     <div className={S.container}>
       <div className={S.card}>
         {/* Title bar */}
         <div className={S.titleBar}>
-          <div className={`${S.light} ${status === null ? S.idle : isActive ? S.on : S.off}`} />
+          <div className={`${S.light} ${lightClass}`} />
           <h2 className={S.title}>RunPod ComfyUI</h2>
         </div>
 
-        <p className={S.statusText}>
-          {status === null ? 'Checking...' : isActive ? 'Running' : 'Stopped'}
-        </p>
-
         <div className={S.divider} />
 
-        {/* Action button */}
-        {status !== null && (
+        {/* Action area */}
+        {pods !== null && (
           <div className={S.actions}>
-            {isActive ? (
-              <button
-                className={`${S.btn} ${S.terminate}`}
-                onClick={() => handleAction('terminate')}
-                disabled={!!actionLoading}
-              >
-                {actionLoading === 'terminate' ? (
-                  <InlineLoader size={4} color={cssVar('--text-primary')} />
-                ) : (
-                  'Terminate'
-                )}
-              </button>
-            ) : (
+            {podCount === 0 && (
               <button
                 className={`${S.btn} ${S.create}`}
-                onClick={() => handleAction('create')}
+                onClick={handleCreate}
                 disabled={!!actionLoading}
               >
                 {actionLoading === 'create' ? (
@@ -82,6 +79,77 @@ const RunPod = () => {
                   'Create'
                 )}
               </button>
+            )}
+
+            {podCount === 1 && (
+              <>
+                <div className={S.podItem}>
+                  <div className={S.podInfo}>
+                    <span className={S.podName}>{pods[0].name}</span>
+                    <span className={S.podId}>{pods[0].id}</span>
+                  </div>
+                  <div className={S.podLinks}>
+                    <a
+                      className={S.podLink}
+                      href={`https://${pods[0].id}-8188.proxy.runpod.net`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      ComfyUI
+                    </a>
+                    <a
+                      className={`${S.podLink} ${S.podLinkJupyter}`}
+                      href={`https://${pods[0].id}-8888.proxy.runpod.net`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Jupyter
+                    </a>
+                  </div>
+                </div>
+                <button
+                  className={`${S.btn} ${S.terminate}`}
+                  onClick={() => handleTerminate(pods[0].id)}
+                  disabled={!!actionLoading}
+                >
+                  {actionLoading === pods[0].id ? (
+                    <InlineLoader size={4} color={cssVar('--text-primary')} />
+                  ) : (
+                    'Terminate'
+                  )}
+                </button>
+              </>
+            )}
+
+            {podCount > 1 && (
+              <>
+                <p className={S.warning}>
+                  Multiple pods are running — only one is allowed at a time.
+                  <br />
+                  Terminate the extras below to restore ComfyUI access.
+                </p>
+                <ul className={S.podList}>
+                  {pods.map((pod) => (
+                    <li key={pod.id} className={S.podItem}>
+                      <div className={S.podInfo}>
+                        <span className={S.podName}>{pod.name}</span>
+                        <span className={S.podId}>{pod.id}</span>
+                      </div>
+                      <button
+                        className={S.podTerminate}
+                        onClick={() => handleTerminate(pod.id)}
+                        disabled={!!actionLoading}
+                      >
+                        {actionLoading === pod.id ? (
+                          <InlineLoader size={3} color={cssVar('--error-red')} />
+                        ) : (
+                          <Icon icon="faXmark" />
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
           </div>
         )}

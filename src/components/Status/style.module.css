@@ -71,7 +71,7 @@
   height: 40%;
   background: var(--bg-secondary);
   color: grey;
-  font-family: monospace;
+  font-family: 'JetBrains Mono', monospace;
   display: flex;
   flex-direction: column;
   border-top: 0.125rem solid var(--border-color);

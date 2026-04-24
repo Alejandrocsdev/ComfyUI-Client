@@ -1,7 +1,7 @@
 // Module CSS
 import S from './style.module.css';
 // Components
-import Status from '../../Status';
+// import Status from '../../Status';
 
 const Header = () => {
   return (
@@ -10,7 +10,7 @@ const Header = () => {
       <div className={S.left}></div>
       {/* Right */}
       <div className={S.right}>
-        <Status />
+        {/* <Status /> */}
       </div>
     </header>
   );

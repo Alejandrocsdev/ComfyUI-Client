@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(curl -sA 'Mozilla/5.0 \\(X11; Linux x86_64\\)' 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap')",
+      "Bash(curl -sA 'Mozilla/5.0 \\(X11; Linux x86_64\\)' 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap')",
+      "Bash(curl -sA 'Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36' 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap')",
+      "Bash(curl -sA 'Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36' 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap')",
+      "Bash(curl -sL \"https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2\" -o \"inter-latin.woff2\")",
+      "Bash(curl -sL \"https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOV.woff2\" -o \"jetbrains-mono-latin.woff2\")"
+    ]
+  }
+}
