@@ -16,6 +16,7 @@ const RunPod = () => {
   const [pods, setPods] = useState(null);
   const [actionLoading, setActionLoading] = useState(null);
   const [reachability, setReachability] = useState({ comfyui: false, jupyter: false });
+  const [createError, setCreateError] = useState(null);
 
   useEffect(() => {
     const es = new EventSource(`${serverUrl}/api/runpod/pods/stream`);
@@ -38,8 +39,14 @@ const RunPod = () => {
   const handleCreate = async () => {
     if (actionLoading) return;
     setActionLoading('create');
+    setCreateError(null);
     await api(axiosPublic.post('/api/runpod/pods'), {
       onSuccess: () => fetchPods(),
+      onError: (error) => {
+        if (error.response?.status === 503) {
+          setCreateError('There are no instances currently available');
+        }
+      },
     });
     await delay(500);
     setActionLoading(null);
@@ -74,17 +81,20 @@ const RunPod = () => {
         {pods !== null && (
           <div className={S.actions}>
             {podCount === 0 && (
-              <button
-                className={`${S.btn} ${S.create}`}
-                onClick={handleCreate}
-                disabled={!!actionLoading}
-              >
-                {actionLoading === 'create' ? (
-                  <InlineLoader size={4} color={cssVar('--text-primary')} />
-                ) : (
-                  'Create'
-                )}
-              </button>
+              <>
+                <button
+                  className={`${S.btn} ${S.create}`}
+                  onClick={handleCreate}
+                  disabled={!!actionLoading}
+                >
+                  {actionLoading === 'create' ? (
+                    <InlineLoader size={4} color={cssVar('--text-primary')} />
+                  ) : (
+                    'Create'
+                  )}
+                </button>
+                {createError && <p className={S.warning}>{createError}</p>}
+              </>
             )}
 
             {podCount === 1 && (
