@@ -24,6 +24,23 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
+  width: 100%;
+}
+
+.balance {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  min-width: 3.5rem;
+  justify-content: flex-end;
+}
+
+.balanceAmount {
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--active-green);
+  letter-spacing: 0.02em;
 }
 
 .title {

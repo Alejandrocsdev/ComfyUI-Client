@@ -17,6 +17,7 @@ const RunPod = () => {
   const [actionLoading, setActionLoading] = useState(null);
   const [reachability, setReachability] = useState({ comfyui: false, jupyter: false });
   const [createError, setCreateError] = useState(null);
+  const [balance, setBalance] = useState(null);
 
   useEffect(() => {
     const es = new EventSource(`${serverUrl}/api/runpod/pods/stream`, { withCredentials: true });
@@ -26,6 +27,17 @@ const RunPod = () => {
       setReachability(reachability);
     };
     return () => es.close();
+  }, []);
+
+  useEffect(() => {
+    const fetchBalance = () => {
+      api(axiosPrivate.get('/api/runpod/balance'), {
+        onSuccess: (data) => setBalance(data.data.myself.clientBalance),
+      });
+    };
+    fetchBalance();
+    const interval = setInterval(fetchBalance, 60_000);
+    return () => clearInterval(interval);
   }, []);
 
   // One-time fetch after mutations for immediate UI feedback
@@ -73,6 +85,13 @@ const RunPod = () => {
         <div className={S.titleBar}>
           <div className={`${S.light} ${lightClass}`} />
           <h2 className={S.title}>RunPod ComfyUI</h2>
+          <div className={S.balance}>
+            {balance === null ? (
+              <InlineLoader size={3} color={cssVar('--active-green')} />
+            ) : (
+              <span className={S.balanceAmount}>${balance.toFixed(2)}</span>
+            )}
+          </div>
         </div>
 
         <div className={S.divider} />
