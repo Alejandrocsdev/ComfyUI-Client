@@ -8,20 +8,26 @@ import { api, axiosPublic } from '../../api';
 import InlineLoader from '../../components/Loaders/InlineLoader';
 import Icon from '../../components/Icon';
 // Utilities
-import { cssVar } from '../../utils';
+import { cssVar, serverUrl } from '../../utils';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const RunPod = () => {
   const [pods, setPods] = useState(null);
   const [actionLoading, setActionLoading] = useState(null);
+  const [reachability, setReachability] = useState({ comfyui: false, jupyter: false });
 
   useEffect(() => {
-    fetchPods();
-    const interval = setInterval(fetchPods, 5000);
-    return () => clearInterval(interval);
+    const es = new EventSource(`${serverUrl}/api/runpod/pods/stream`);
+    es.onmessage = (e) => {
+      const { pods, reachability } = JSON.parse(e.data);
+      setPods(pods);
+      setReachability(reachability);
+    };
+    return () => es.close();
   }, []);
 
+  // One-time fetch after mutations for immediate UI feedback
   const fetchPods = async () => {
     await api(axiosPublic.get('/api/runpod/pods'), {
       onSuccess: (data) => setPods(data),
@@ -49,7 +55,7 @@ const RunPod = () => {
     setActionLoading(null);
   };
 
-  const podCount = pods ? pods.length : null;
+  const podCount = pods?.length ?? null;
   const isActive = podCount !== null && podCount > 0;
   const lightClass = pods === null ? S.idle : isActive ? S.on : S.off;
 
@@ -89,22 +95,34 @@ const RunPod = () => {
                     <span className={S.podId}>{pods[0].id}</span>
                   </div>
                   <div className={S.podLinks}>
-                    <a
-                      className={S.podLink}
-                      href={`https://${pods[0].id}-8188.proxy.runpod.net`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      ComfyUI
-                    </a>
-                    <a
-                      className={`${S.podLink} ${S.podLinkJupyter}`}
-                      href={`https://${pods[0].id}-8888.proxy.runpod.net`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Jupyter
-                    </a>
+                    {reachability.comfyui ? (
+                      <a
+                        className={S.podLink}
+                        href={`https://${pods[0].id}-8188.proxy.runpod.net`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        ComfyUI
+                      </a>
+                    ) : (
+                      <div className={S.podLinkLoader}>
+                        <InlineLoader size={3} color={cssVar('--accent-primary')} />
+                      </div>
+                    )}
+                    {reachability.jupyter ? (
+                      <a
+                        className={`${S.podLink} ${S.podLinkJupyter}`}
+                        href={`https://${pods[0].id}-8888.proxy.runpod.net`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Jupyter
+                      </a>
+                    ) : (
+                      <div className={S.podLinkLoader}>
+                        <InlineLoader size={3} color={cssVar('--text-tertiary')} />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <button
