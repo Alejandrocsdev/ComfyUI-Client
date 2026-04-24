@@ -17,6 +17,48 @@
 }
 
 .right {
-  justify-content: right;
-	align-items: center;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 0.5rem;
+}
+
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  cursor: default;
+  user-select: none;
+  background:
+    linear-gradient(var(--bg-tertiary), var(--bg-tertiary)) padding-box,
+    linear-gradient(135deg, hsl(245, 75%, 65%), hsl(28, 95%, 60%)) border-box;
+  border: 1px solid transparent;
+}
+
+.logoAi {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: linear-gradient(135deg, hsl(245, 75%, 72%), hsl(180, 100%, 58%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.logoDivider {
+  width: 1px;
+  height: 0.85rem;
+  background: linear-gradient(180deg, hsl(245, 75%, 65%), hsl(28, 95%, 60%));
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+.logoOfm {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  color: hsl(28, 95%, 60%);
 }
