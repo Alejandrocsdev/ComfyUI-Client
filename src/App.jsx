@@ -10,6 +10,7 @@ import Layout from './components/Layout';
 import ScreenLoader from './components/Loaders/ScreenLoader';
 // Public Pages
 import Home from './pages/Home';
+import RunPod from './pages/RunPod';
 
 const App = () => {
   const { loading, error } = useLoader();
@@ -20,7 +21,8 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<RunPod />} />
+          <Route path="home" element={<Home />} />
         </Route>
       </Routes>
     </BrowserRouter>

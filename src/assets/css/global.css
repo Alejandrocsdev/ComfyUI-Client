@@ -54,5 +54,5 @@ button {
 	--inactive-red-border: hsl(0, 100%, 20%);
 	--error-red: hsl(355, 70%, 45%);
 	/* Header Hight */
-	--header-height: 5rem;
+	--header-height: 3.5rem;
 }
