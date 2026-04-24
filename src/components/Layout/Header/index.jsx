@@ -2,8 +2,6 @@
 import S from './style.module.css';
 // Context
 import { useAuth } from '../../../context/AuthContext';
-// Components
-// import Status from '../../Status';
 
 const Header = () => {
   const { user, logout } = useAuth();
