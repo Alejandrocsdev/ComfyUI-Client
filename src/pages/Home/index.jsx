@@ -3,7 +3,7 @@ import S from './style.module.css';
 // Libraries
 import { useState } from 'react';
 // API
-import { api, axiosPublic } from '../../api';
+import { api, axiosPrivate } from '../../api';
 
 const defaultForm = {
   positive: '',
@@ -53,7 +53,7 @@ const Home = () => {
     // =========================
     let promptId = null;
 
-    await api(axiosPublic.post('/api/comfyui/prompt', body), {
+    await api(axiosPrivate.post('/api/comfyui/prompt', body), {
       onSuccess: (data) => {
         promptId = data?.prompt_id;
       },
@@ -80,7 +80,7 @@ const Home = () => {
       let imageResult = null;
       let notFound = false;
 
-      await api(axiosPublic.get(`/api/comfyui/image/${promptId}`), {
+      await api(axiosPrivate.get(`/api/comfyui/image/${promptId}`), {
         onSuccess: (data) => {
           imageResult = data?.image;
         },

@@ -3,7 +3,7 @@ import S from './style.module.css';
 // Libraries
 import { useEffect, useState } from 'react';
 // API
-import { api, axiosPublic } from '../../api';
+import { api, axiosPrivate } from '../../api';
 // Components
 import InlineLoader from '../../components/Loaders/InlineLoader';
 import Icon from '../../components/Icon';
@@ -19,7 +19,7 @@ const RunPod = () => {
   const [createError, setCreateError] = useState(null);
 
   useEffect(() => {
-    const es = new EventSource(`${serverUrl}/api/runpod/pods/stream`);
+    const es = new EventSource(`${serverUrl}/api/runpod/pods/stream`, { withCredentials: true });
     es.onmessage = (e) => {
       const { pods, reachability } = JSON.parse(e.data);
       setPods(pods);
@@ -30,7 +30,7 @@ const RunPod = () => {
 
   // One-time fetch after mutations for immediate UI feedback
   const fetchPods = async () => {
-    await api(axiosPublic.get('/api/runpod/pods'), {
+    await api(axiosPrivate.get('/api/runpod/pods'), {
       onSuccess: (data) => setPods(data),
       onError: () => setPods([]),
     });
@@ -40,7 +40,7 @@ const RunPod = () => {
     if (actionLoading) return;
     setActionLoading('create');
     setCreateError(null);
-    await api(axiosPublic.post('/api/runpod/pods'), {
+    await api(axiosPrivate.post('/api/runpod/pods'), {
       onSuccess: () => fetchPods(),
       onError: (error) => {
         if (error.response?.status === 503) {
@@ -55,7 +55,7 @@ const RunPod = () => {
   const handleTerminate = async (podId) => {
     if (actionLoading) return;
     setActionLoading(podId);
-    await api(axiosPublic.delete(`/api/runpod/pods/${podId}`), {
+    await api(axiosPrivate.delete(`/api/runpod/pods/${podId}`), {
       onSuccess: () => fetchPods(),
     });
     await delay(500);

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Icon from '../Icon';
 import InlineLoader from '../Loaders/InlineLoader';
 // API
-import { api, axiosPublic } from '../../api';
+import { api, axiosPrivate } from '../../api';
 // Utilities
 import { cssVar } from '../../utils';
 
@@ -29,7 +29,7 @@ const Status = () => {
 
   const checkComfyui = async () => {
     if (loading) return;
-    await api(axiosPublic.get('/api/comfyui/server'), {
+    await api(axiosPrivate.get('/api/comfyui/server'), {
       onSuccess: (data) => setStatus(data.status),
       onError: () => setStatus('inactive'),
     });
@@ -43,7 +43,7 @@ const Status = () => {
   }, [showLog]);
 
   const fetchLog = async () => {
-    await api(axiosPublic.get('/api/comfyui/server/log'), {
+    await api(axiosPrivate.get('/api/comfyui/server/log'), {
       onSuccess: (data) => {
         const lines = data.log ? data.log.split('\n') : [];
         setLog(lines);
@@ -62,7 +62,7 @@ const Status = () => {
     if (loading) return;
     setLoading(true);
     let isSuccess = false;
-    api(axiosPublic.post('/api/comfyui/server/start'), {
+    api(axiosPrivate.post('/api/comfyui/server/start'), {
       onSuccess: () => (isSuccess = true),
     });
     await delay(800);
@@ -74,7 +74,7 @@ const Status = () => {
     if (loading) return;
     setLoading(true);
     let isSuccess = false;
-    api(axiosPublic.post('/api/comfyui/server/stop'), {
+    api(axiosPrivate.post('/api/comfyui/server/stop'), {
       onSuccess: () => (isSuccess = true),
     });
     await delay(800);

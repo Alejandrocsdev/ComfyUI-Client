@@ -1,0 +1,106 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 340px;
+  padding: 2.5rem 2rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+/* Logo — mirrors the Header logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  user-select: none;
+  background:
+    linear-gradient(var(--bg-tertiary), var(--bg-tertiary)) padding-box,
+    linear-gradient(135deg, hsl(245, 75%, 65%), hsl(28, 95%, 60%)) border-box;
+  border: 1px solid transparent;
+}
+
+.logoAi {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: linear-gradient(135deg, hsl(245, 75%, 72%), hsl(180, 100%, 58%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.logoDivider {
+  width: 1px;
+  height: 0.85rem;
+  background: linear-gradient(180deg, hsl(245, 75%, 65%), hsl(28, 95%, 60%));
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+.logoOfm {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  color: hsl(28, 95%, 60%);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.error {
+  font-size: 0.8125rem;
+  color: var(--error-red);
+  text-align: center;
+}
+
+/* Google sign-in button follows Google's branding guidelines */
+.googleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background-color: #fff;
+  color: #3c4043;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-family: 'Roboto', 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, background-color 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.googleBtn:hover {
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.googleBtn:active {
+  background-color: #f0f0f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.googleIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
