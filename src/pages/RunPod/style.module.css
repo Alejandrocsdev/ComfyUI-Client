@@ -119,6 +119,12 @@
   cursor: not-allowed;
 }
 
+.btnRow {
+  display: flex;
+  gap: 0.625rem;
+  width: 100%;
+}
+
 .create {
   background-color: var(--accent-primary);
   border-color: transparent;
@@ -127,6 +133,16 @@
 
 .create:hover:not(:disabled) {
   opacity: 0.82;
+}
+
+.vae {
+  background-color: var(--bg-tertiary);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.vae:hover:not(:disabled) {
+  background-color: hsl(225, 20%, 20%);
 }
 
 .terminate {

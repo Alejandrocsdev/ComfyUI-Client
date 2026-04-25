@@ -58,6 +58,22 @@ const RunPod = () => {
     setActionLoading(null);
   };
 
+  const handleVAE = async () => {
+    if (actionLoading) return;
+    setActionLoading('vae');
+    setActionError(null);
+    await api(
+      axiosPrivate.post('/api/runpod/ssh/exec', {
+        command: 'cd /workspace/comfyui/models/vae && wget https://huggingface.co/lovis93/testllm/resolve/ed9cf1af7465cebca4649157f118e331cf2a084f/ae.safetensors',
+      }),
+      {
+        onSuccess: (data) => console.log('[VAE]', data),
+        onError: () => setActionError('VAE download failed'),
+      }
+    );
+    setActionLoading(null);
+  };
+
   const handleTerminate = async (podId) => {
     if (actionLoading) return;
     setActionLoading(podId);
@@ -151,17 +167,30 @@ const RunPod = () => {
                     )}
                   </div>
                 </div>
-                <button
-                  className={`${S.btn} ${S.terminate}`}
-                  onClick={() => handleTerminate(pods[0].id)}
-                  disabled={!!actionLoading}
-                >
-                  {actionLoading === pods[0].id ? (
-                    <InlineLoader size={4} color={cssVar('--text-primary')} />
-                  ) : (
-                    'Terminate'
-                  )}
-                </button>
+                <div className={S.btnRow}>
+                  <button
+                    className={`${S.btn} ${S.vae}`}
+                    onClick={handleVAE}
+                    disabled={!!actionLoading}
+                  >
+                    {actionLoading === 'vae' ? (
+                      <InlineLoader size={4} color={cssVar('--text-primary')} />
+                    ) : (
+                      'VAE'
+                    )}
+                  </button>
+                  <button
+                    className={`${S.btn} ${S.terminate}`}
+                    onClick={() => handleTerminate(pods[0].id)}
+                    disabled={!!actionLoading}
+                  >
+                    {actionLoading === pods[0].id ? (
+                      <InlineLoader size={4} color={cssVar('--text-primary')} />
+                    ) : (
+                      'Terminate'
+                    )}
+                  </button>
+                </div>
               </>
             )}
 
