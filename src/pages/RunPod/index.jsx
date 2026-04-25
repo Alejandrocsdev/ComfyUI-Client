@@ -2,6 +2,9 @@
 import S from './style.module.css';
 // Libraries
 import { useEffect, useState } from 'react';
+// FontAwesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleDown } from '@fortawesome/free-solid-svg-icons';
 // API
 import { api, axiosPrivate } from '../../api';
 // Context
@@ -12,13 +15,25 @@ import Icon from '../../components/Icon';
 // Utilities
 import { cssVar } from '../../utils';
 
+const MODEL_TYPES = [
+  'audio_encoders', 'checkpoints', 'clip', 'clip_vision', 'configs',
+  'controlnet', 'diffusers', 'diffusion_models', 'embeddings',
+  'frame_interpolation', 'gligen', 'hypernetworks', 'latent_upscale_models',
+  'loras', 'model_patches', 'photomaker', 'style_models', 'text_encoders',
+  'unet', 'upscale_models', 'vae', 'vae_approx',
+];
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const RunPod = () => {
-  const { pods, reachability, refreshPods } = usePod();
+  const { pods, reachability, refreshPods, resetReachability } = usePod();
   const [actionLoading, setActionLoading] = useState(null);
   const [actionError, setActionError] = useState(null);
   const [balance, setBalance] = useState(null);
+
+  const [modelType, setModelType] = useState('');
+  const [modelUrl, setModelUrl] = useState('');
+  const [customNodeUrl, setCustomNodeUrl] = useState('');
 
   useEffect(() => {
     if (pods !== null && pods.length > 1) {
@@ -58,19 +73,13 @@ const RunPod = () => {
     setActionLoading(null);
   };
 
-  const handleVAE = async () => {
+  const handleRestart = async (podId) => {
     if (actionLoading) return;
-    setActionLoading('vae');
+    setActionLoading('restart');
     setActionError(null);
-    await api(
-      axiosPrivate.post('/api/runpod/ssh/exec', {
-        command: 'cd /workspace/comfyui/models/vae && wget https://huggingface.co/lovis93/testllm/resolve/ed9cf1af7465cebca4649157f118e331cf2a084f/ae.safetensors',
-      }),
-      {
-        onSuccess: (data) => console.log('[VAE]', data),
-        onError: () => setActionError('VAE download failed'),
-      }
-    );
+    api(axiosPrivate.post(`/api/runpod/pods/${podId}`));
+    await delay(3000);
+    resetReachability();
     setActionLoading(null);
   };
 
@@ -86,12 +95,29 @@ const RunPod = () => {
     setActionLoading(null);
   };
 
+  const handleModelDownload = async () => {
+    if (!modelType || !modelUrl.trim() || actionLoading) return;
+    setActionLoading('model');
+    setActionError(null);
+    await api(
+      axiosPrivate.post('/api/runpod/ssh/exec', {
+        command: `cd /workspace/comfyui/models/${modelType} && wget ${modelUrl.trim()}`,
+      }),
+      {
+        onSuccess: () => setModelUrl(''),
+        onError: () => setActionError('Model download failed'),
+      }
+    );
+    setActionLoading(null);
+  };
+
   const podCount = pods?.length ?? null;
   const isActive = podCount !== null && podCount > 0;
   const lightClass = pods === null ? S.idle : isActive ? S.on : S.off;
 
   return (
     <div className={S.container}>
+      {/* Card 1 — Pod management */}
       <div className={S.card}>
         {/* Title bar */}
         <div className={S.titleBar}>
@@ -169,14 +195,14 @@ const RunPod = () => {
                 </div>
                 <div className={S.btnRow}>
                   <button
-                    className={`${S.btn} ${S.vae}`}
-                    onClick={handleVAE}
+                    className={`${S.btn} ${S.restart}`}
+                    onClick={() => handleRestart(pods[0].id)}
                     disabled={!!actionLoading}
                   >
-                    {actionLoading === 'vae' ? (
-                      <InlineLoader size={4} color={cssVar('--text-primary')} />
+                    {actionLoading === 'restart' ? (
+                      <InlineLoader size={4} color={cssVar('--accent-primary')} />
                     ) : (
-                      'VAE'
+                      'Restart'
                     )}
                   </button>
                   <button
@@ -222,6 +248,59 @@ const RunPod = () => {
           </div>
         )}
       </div>
+
+      {/* Card 2 — Downloads (only when pod is running) */}
+      {podCount === 1 && (
+        <div className={S.card}>
+          {/* Model row */}
+          <div className={S.downloadRow}>
+            <span className={S.rowLabel}>Model</span>
+            <select
+              className={S.typeSelect}
+              value={modelType}
+              onChange={(e) => setModelType(e.target.value)}
+            >
+              <option value="" disabled>Type</option>
+              {MODEL_TYPES.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+            <input
+              className={S.urlInput}
+              value={modelUrl}
+              onChange={(e) => setModelUrl(e.target.value)}
+              placeholder="URL"
+            />
+            <button
+              className={S.downloadBtn}
+              onClick={handleModelDownload}
+              disabled={!modelType || !modelUrl.trim() || !!actionLoading}
+            >
+              {actionLoading === 'model' ? (
+                <InlineLoader size={3} color={cssVar('--accent-primary')} />
+              ) : (
+                <FontAwesomeIcon icon={faCircleDown} />
+              )}
+            </button>
+          </div>
+
+          <div className={S.divider} />
+
+          {/* Custom Node row */}
+          <div className={S.downloadRow}>
+            <span className={S.rowLabel}>Custom Node</span>
+            <input
+              className={S.urlInput}
+              value={customNodeUrl}
+              onChange={(e) => setCustomNodeUrl(e.target.value)}
+              placeholder="URL"
+            />
+            <button className={S.downloadBtn} disabled={!customNodeUrl.trim() || !!actionLoading}>
+              <FontAwesomeIcon icon={faCircleDown} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

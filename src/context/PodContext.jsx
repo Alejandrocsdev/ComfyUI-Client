@@ -25,8 +25,10 @@ export const PodProvider = ({ children }) => {
     });
   };
 
+  const resetReachability = () => setReachability({ comfyui: false, jupyter: false });
+
   return (
-    <PodContext.Provider value={{ pods, reachability, refreshPods }}>
+    <PodContext.Provider value={{ pods, reachability, refreshPods, resetReachability }}>
       {children}
     </PodContext.Provider>
   );
