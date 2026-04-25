@@ -21,10 +21,10 @@
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
-    "@cubone/react-file-manager": "^1.35.0",
     "@fortawesome/free-regular-svg-icons": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.3.0",
+    "@svar-ui/react-filemanager": "^2.5.0",
     "axios": "^1.13.2",
     "dotenv": "^17.3.1",
     "react": "^19.2.0",
