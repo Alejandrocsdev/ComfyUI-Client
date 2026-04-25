@@ -28,6 +28,22 @@
   color: var(--text-secondary);
 }
 
+.outputBtn {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.outputBtn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
 .logoutBtn {
   font-size: 0.8rem;
   color: var(--accent-primary);

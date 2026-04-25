@@ -1,0 +1,241 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  width: min(960px, 92vw);
+  height: min(680px, 88vh);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+
+/* ─── Dark-mode overrides for @cubone/react-file-manager ─────────────────── */
+
+/* Root */
+.panel :global(.file-explorer) {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Toolbar */
+.panel :global(.toolbar) {
+  border-bottom-color: var(--border-color);
+}
+.panel :global(.toolbar .item-action) {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+.panel :global(.toolbar .item-action:hover) {
+  background-color: rgba(255, 255, 255, 0.07) !important;
+}
+.panel :global(.toolbar .fm-toolbar .toggle-view) {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+.panel :global(.toolbar .fm-toolbar .toggle-view ul li:hover) {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* File-action buttons (cut / copy / paste / delete row) */
+.panel :global(.toolbar .file-action-container .file-action:hover:not(:disabled)) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Breadcrumb */
+.panel :global(.bread-crumb-container .breadcrumb) {
+  border-bottom-color: var(--border-color);
+}
+.panel :global(.bread-crumb-container .breadcrumb .divider) {
+  background-color: var(--border-color);
+}
+.panel :global(.bread-crumb-container .breadcrumb .folder-name-btn:hover),
+.panel :global(.bread-crumb-container .breadcrumb .folder-name-btn:focus) {
+  background-color: var(--bg-tertiary);
+}
+
+/* Navigation / sidebar pane */
+.panel :global(.file-explorer .files-container .navigation-pane) {
+  background-color: var(--bg-secondary);
+}
+.panel :global(.file-explorer .files-container .navigation-pane .sidebar-resize) {
+  border-right-color: var(--border-color);
+}
+
+/* Folder tree */
+.panel :global(.sb-folders-list .sb-folders-list-item:hover > div) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.panel :global(.sb-folders-list .sb-folders-list-item .non-expanable:hover),
+.panel :global(.sb-folders-list .sb-folders-list-item .sb-folder-details:hover) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Files list header */
+.panel :global(.files-header) {
+  background-color: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+  color: var(--text-secondary);
+}
+.panel :global(.files.list .files-header .file-name.active),
+.panel :global(.files.list .files-header .file-date.active),
+.panel :global(.files.list .files-header .file-size.active) {
+  background-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* File items */
+.panel :global(.files .file-item:hover) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.panel :global(.files.list .file-item-container:hover) {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+.panel :global(.files.list .file-item-container.file-drop-zone) {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Context menu */
+.panel :global(.fm-context-menu),
+.panel :global(.fm-context-menu .sub-menu) {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+.panel :global(.fm-context-menu .file-context-menu-list ul li:hover:not(.disable-paste)) {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.panel :global(.fm-context-menu .file-context-menu-list ul li.active) {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.panel :global(.fm-context-menu .file-context-menu-list .divider) {
+  border-bottom-color: var(--border-color);
+}
+
+/* Modals */
+.panel :global(.fm-modal-header) {
+  border-bottom-color: var(--border-color);
+}
+.panel :global(.fm-modal-header .fm-modal-heading) {
+  color: var(--text-primary);
+}
+
+/* Secondary button */
+.panel :global(.fm-button-secondary) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Upload drop zone */
+.panel :global(.draggable-file-input) {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+.panel :global(.upload-loading .spinner) {
+  color: var(--text-primary);
+}
+
+/* Rename input */
+.panel :global(.rename-file) {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Drag tooltip */
+.panel :global(.files .drag-move-tooltip) {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+.panel :global(.files .drag-move-tooltip .drop-zone-file-name) {
+  color: var(--text-primary);
+}
+
+/* Icons / misc text */
+.panel :global(.list-expand-icon),
+.panel :global(.item-selected),
+.panel :global(.error-icon) {
+  color: var(--text-secondary);
+}
+
+/* Folders preview panel (below nav pane) */
+.panel :global(.folders-preview) {
+  /* background-color: var(--bg-secondary)!important; */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Folders preview container */
+.panel :global(.folders-preview) {
+  background-color: var(--bg-primary);
+}
+
+/* 🔥 MAIN grid background (this is the important one) */
+.panel :global(.folders-preview .files.grid) {
+  background-color: var(--bg-primary);
+}
+
+/* File items */
+.panel :global(.folders-preview .file-item) {
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+/* Hover state */
+.panel :global(.folders-preview .file-item:hover) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* File name text */
+.panel :global(.folders-preview .file-name) {
+  color: var(--text-primary);
+}
+
+
+
+
+
+
+
+
+/* Folders preview breadcrumb container */
+.panel :global(.folders-preview .bread-crumb-container .breadcrumb) {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Folder name text */
+.panel :global(.folders-preview .breadcrumb .folder-name) {
+  color: var(--text-primary);
+}
+
+/* Icon color */
+.panel :global(.folders-preview .breadcrumb svg) {
+  color: var(--text-secondary);
+}
+
+/* Hover effect (if clickable) */
+.panel :global(.folders-preview .breadcrumb .folder-name:hover) {
+  background-color: var(--bg-tertiary);
+}

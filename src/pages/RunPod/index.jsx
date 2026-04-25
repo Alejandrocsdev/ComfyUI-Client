@@ -4,33 +4,27 @@ import S from './style.module.css';
 import { useEffect, useState } from 'react';
 // API
 import { api, axiosPrivate } from '../../api';
+// Context
+import { usePod } from '../../context/PodContext';
 // Components
 import InlineLoader from '../../components/Loaders/InlineLoader';
 import Icon from '../../components/Icon';
 // Utilities
-import { cssVar, serverUrl } from '../../utils';
+import { cssVar } from '../../utils';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const RunPod = () => {
-  const [pods, setPods] = useState(null);
+  const { pods, reachability, refreshPods } = usePod();
   const [actionLoading, setActionLoading] = useState(null);
-  const [reachability, setReachability] = useState({ comfyui: false, jupyter: false });
   const [actionError, setActionError] = useState(null);
   const [balance, setBalance] = useState(null);
 
   useEffect(() => {
-    const es = new EventSource(`${serverUrl}/api/runpod/pods/stream`, { withCredentials: true });
-    es.onmessage = (e) => {
-      const { pods, reachability } = JSON.parse(e.data);
-      setPods(pods);
-      setReachability(reachability);
-      if (pods.length > 1) {
-        setActionError('Only one pod is allowed. Terminate extras to restore ComfyUI access');
-      }
-    };
-    return () => es.close();
-  }, []);
+    if (pods !== null && pods.length > 1) {
+      setActionError('Only one pod is allowed. Terminate extras to restore ComfyUI access');
+    }
+  }, [pods]);
 
   useEffect(() => {
     const fetchBalance = () => {
@@ -43,20 +37,12 @@ const RunPod = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // One-time fetch after mutations for immediate UI feedback
-  const fetchPods = async () => {
-    await api(axiosPrivate.get('/api/runpod/pods'), {
-      onSuccess: (data) => setPods(data),
-      onError: () => setPods([]),
-    });
-  };
-
   const handleCreate = async () => {
     if (actionLoading) return;
     setActionLoading('create');
     setActionError(null);
     await api(axiosPrivate.post('/api/runpod/pods'), {
-      onSuccess: () => fetchPods(),
+      onSuccess: () => refreshPods(),
       onError: (error) => {
         if (error.response?.status === 503) {
           const raw = error.response?.data?.message ?? '';
@@ -77,7 +63,7 @@ const RunPod = () => {
     setActionLoading(podId);
     setActionError(null);
     await api(axiosPrivate.delete(`/api/runpod/pods/${podId}`), {
-      onSuccess: () => fetchPods(),
+      onSuccess: () => refreshPods(),
       onError: () => setActionError('Failed to terminate pod.'),
     });
     await delay(500);

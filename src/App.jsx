@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import useLoader from './hooks/useLoader';
 // Context
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { PodProvider } from './context/PodContext';
 // Components
 import Error from './components/Error';
 import Layout from './components/Layout';
@@ -31,15 +32,17 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<RunPod />} />
-              <Route path="home" element={<Home />} />
+        <PodProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<RunPod />} />
+                <Route path="home" element={<Home />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </PodProvider>
       </AuthProvider>
     </BrowserRouter>
   );
