@@ -208,6 +208,13 @@
   text-overflow: ellipsis;
 }
 
+.podCreatedAt {
+  font-size: 0.7rem;
+  color: hsl(38, 95%, 55%);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .podId {
   font-size: 0.72rem;
   color: var(--text-tertiary);

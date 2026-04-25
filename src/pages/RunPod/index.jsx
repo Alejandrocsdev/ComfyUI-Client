@@ -111,6 +111,23 @@ const RunPod = () => {
     setActionLoading(null);
   };
 
+  const handleCustomNodeInstall = async () => {
+    if (!customNodeUrl.trim() || actionLoading) return;
+    setActionLoading('customNode');
+    setActionError(null);
+    const url = customNodeUrl.trim();
+    const repoName = url.replace(/\.git$/, '').split('/').pop();
+    const command = `cd /workspace/comfyui/custom_nodes && git clone ${url} && cd ${repoName} && pip install -r requirements.txt -q`;
+    await api(
+      axiosPrivate.post('/api/runpod/ssh/exec', { command }),
+      {
+        onSuccess: () => setCustomNodeUrl(''),
+        onError: () => setActionError('Custom node installation failed'),
+      }
+    );
+    setActionLoading(null);
+  };
+
   const podCount = pods?.length ?? null;
   const isActive = podCount !== null && podCount > 0;
   const lightClass = pods === null ? S.idle : isActive ? S.on : S.off;
@@ -162,6 +179,11 @@ const RunPod = () => {
                     <span className={S.podName}>{pods[0].name}</span>
                     <span className={S.podId}>{pods[0].id}</span>
                   </div>
+                  {pods[0].createdAt && (
+                    <span className={S.podCreatedAt}>
+                      {pods[0].createdAt.split('.')[0].trim()}
+                    </span>
+                  )}
                   <div className={S.podLinks}>
                     {reachability.comfyui ? (
                       <a
@@ -295,8 +317,16 @@ const RunPod = () => {
               onChange={(e) => setCustomNodeUrl(e.target.value)}
               placeholder="URL"
             />
-            <button className={S.downloadBtn} disabled={!customNodeUrl.trim() || !!actionLoading}>
-              <FontAwesomeIcon icon={faCircleDown} />
+            <button
+              className={S.downloadBtn}
+              onClick={handleCustomNodeInstall}
+              disabled={!customNodeUrl.trim() || !!actionLoading}
+            >
+              {actionLoading === 'customNode' ? (
+                <InlineLoader size={3} color={cssVar('--accent-primary')} />
+              ) : (
+                <FontAwesomeIcon icon={faCircleDown} />
+              )}
             </button>
           </div>
         </div>
