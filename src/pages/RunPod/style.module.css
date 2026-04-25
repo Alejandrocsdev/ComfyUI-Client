@@ -43,6 +43,14 @@
   letter-spacing: 0.02em;
 }
 
+.balanceWarning {
+  color: hsl(38, 95%, 55%);
+}
+
+.balanceDanger {
+  color: hsl(15, 90%, 55%);
+}
+
 .title {
   font-size: 1.2rem;
   font-weight: 600;

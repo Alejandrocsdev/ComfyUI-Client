@@ -16,7 +16,7 @@ const RunPod = () => {
   const [pods, setPods] = useState(null);
   const [actionLoading, setActionLoading] = useState(null);
   const [reachability, setReachability] = useState({ comfyui: false, jupyter: false });
-  const [createError, setCreateError] = useState(null);
+  const [actionError, setActionError] = useState(null);
   const [balance, setBalance] = useState(null);
 
   useEffect(() => {
@@ -25,6 +25,9 @@ const RunPod = () => {
       const { pods, reachability } = JSON.parse(e.data);
       setPods(pods);
       setReachability(reachability);
+      if (pods.length > 1) {
+        setActionError('Only one pod is allowed. Terminate extras to restore ComfyUI access');
+      }
     };
     return () => es.close();
   }, []);
@@ -51,12 +54,17 @@ const RunPod = () => {
   const handleCreate = async () => {
     if (actionLoading) return;
     setActionLoading('create');
-    setCreateError(null);
+    setActionError(null);
     await api(axiosPrivate.post('/api/runpod/pods'), {
       onSuccess: () => fetchPods(),
       onError: (error) => {
         if (error.response?.status === 503) {
-          setCreateError('There are no instances currently available');
+          const raw = error.response?.data?.message ?? '';
+          const after = raw.includes(':') ? raw.split(':').slice(1).join(':').trim() : raw.trim();
+          const msg = (after.charAt(0).toUpperCase() + after.slice(1));
+          setActionError(msg || 'Pod creation failed');
+        } else {
+          setActionError('Pod creation failed');
         }
       },
     });
@@ -67,8 +75,10 @@ const RunPod = () => {
   const handleTerminate = async (podId) => {
     if (actionLoading) return;
     setActionLoading(podId);
+    setActionError(null);
     await api(axiosPrivate.delete(`/api/runpod/pods/${podId}`), {
       onSuccess: () => fetchPods(),
+      onError: () => setActionError('Failed to terminate pod.'),
     });
     await delay(500);
     setActionLoading(null);
@@ -89,7 +99,9 @@ const RunPod = () => {
             {balance === null ? (
               <InlineLoader size={3} color={cssVar('--active-green')} />
             ) : (
-              <span className={S.balanceAmount}>${balance.toFixed(2)}</span>
+              <span className={`${S.balanceAmount} ${balance <= 0 ? S.balanceDanger : balance <= 5 ? S.balanceWarning : ''}`}>
+                ${balance.toFixed(2)}
+              </span>
             )}
           </div>
         </div>
@@ -99,21 +111,20 @@ const RunPod = () => {
         {/* Action area */}
         {pods !== null && (
           <div className={S.actions}>
+            {actionError && <p className={S.warning}>{actionError}</p>}
+
             {podCount === 0 && (
-              <>
-                <button
-                  className={`${S.btn} ${S.create}`}
-                  onClick={handleCreate}
-                  disabled={!!actionLoading}
-                >
-                  {actionLoading === 'create' ? (
-                    <InlineLoader size={4} color={cssVar('--text-primary')} />
-                  ) : (
-                    'Create'
-                  )}
-                </button>
-                {createError && <p className={S.warning}>{createError}</p>}
-              </>
+              <button
+                className={`${S.btn} ${S.create}`}
+                onClick={handleCreate}
+                disabled={!!actionLoading}
+              >
+                {actionLoading === 'create' ? (
+                  <InlineLoader size={4} color={cssVar('--text-primary')} />
+                ) : (
+                  'Create'
+                )}
+              </button>
             )}
 
             {podCount === 1 && (
@@ -170,11 +181,6 @@ const RunPod = () => {
 
             {podCount > 1 && (
               <>
-                <p className={S.warning}>
-                  Multiple pods are running — only one is allowed at a time.
-                  <br />
-                  Terminate the extras below to restore ComfyUI access.
-                </p>
                 <ul className={S.podList}>
                   {pods.map((pod) => (
                     <li key={pod.id} className={S.podItem}>
