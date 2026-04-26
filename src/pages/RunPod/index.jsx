@@ -101,7 +101,7 @@ const RunPod = () => {
     setActionError(null);
     await api(
       axiosPrivate.post('/api/runpod/ssh/exec', {
-        command: `cd /workspace/comfyui/models/${modelType} && wget ${modelUrl.trim()}`,
+        command: `nohup bash -c "cd /workspace/comfyui/models/${modelType} && wget -q ${modelUrl.trim()}" > /dev/null 2>&1 &`,
       }),
       {
         onSuccess: () => setModelUrl(''),
